@@ -55,7 +55,7 @@ Add a new .mdx file to src/app/[locale]/blog/posts or src/app/[locale]/work/proj
 
 ## **Content**
 - Render sections conditionally based on the content file
-- Enable or disable pages for blog, work, gallery and about / CV
+- Enable or disable pages for blog, work, and about / CV
 - Generate and display social links automatically
 - Set up password protection for URLs
 

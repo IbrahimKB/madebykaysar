@@ -70,11 +70,6 @@
         "title": "Proyek Saya",
         "description": "Proyek desain dan pengembangan oleh {name}"
     },
-    "gallery": {
-        "label": "Galeri",
-        "title": "Galeri Foto Saya",
-        "description": "Koleksi foto oleh {name}"
-    },
     "projectCard": {
         "label": "Baca Studi Kasus"
     }
