@@ -1,0 +1,208 @@
+---
+title: "Never Miss Out on ASOS Sample Sales Again: Automating Stock Checks"
+publishedAt: "2024-04-08"
+summary: "How I used Python to automate stock checks for ASOS sample sales, ensuring I never miss out on my favorite deals again."
+tag: "Projects"
+---
+
+Have you ever been frustrated by how quickly items go out of stock during ASOS sample sales? It’s happened to me countless times. I’d browse, find something I loved, and—bam!—it’s already gone. Determined to solve this problem, I built a Python script that automates stock checks and notifies me when my selected items are back in stock.
+
+This post walks you through the journey of building this tool, from the challenges I faced to the solutions I implemented.
+
+---
+
+## The Problem
+
+ASOS sample sales are a race against time. The moment items go live, they disappear within seconds. I often found myself clicking through items, only to be greeted with "Out of Stock." I needed a way to:
+1. Continuously monitor specific items.
+2. Be notified immediately when they became available.
+3. Automate this process so I could focus on other tasks.
+
+---
+
+## The Solution: A Stock Monitoring Script
+
+To tackle this, I developed a Python script with the following capabilities:
+- Scraping ASOS product pages to check stock status.
+- Sending desktop notifications when items become available.
+- Handling multiple products at once.
+- Automatically retrying failed requests.
+
+---
+
+## Key Features and How They Work
+
+### **1. Web Scraping with `requests` and `BeautifulSoup`**
+
+The script uses the `requests` library to fetch the HTML content of ASOS product pages. `BeautifulSoup` parses this HTML to identify whether an item is in stock. Here's the code that makes this happen:
+
+<CodeBlock className="my-24"
+    compact
+    codeInstances={[
+        {
+            code: `from bs4 import BeautifulSoup
+import requests
+
+def check_stock(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    stock_element = soup.find("button", class_="ProductForm__AddToCart Button Button--secondary Button--full")
+    if stock_element and "add to cart" in stock_element.get_text(strip=True).lower():
+        return "In Stock"
+    return "Out of Stock"`,
+            label: 'Stock Checking Logic',
+            language: 'python'
+        },
+    ]}
+    copyButton
+/>
+
+**How It Works:**
+- The `User-Agent` header prevents the server from blocking the script by mimicking a real browser.
+- The stock status is determined by locating the "Add to Cart" button in the HTML.
+
+**Challenges Addressed:**
+- Dynamic content: Some websites rely heavily on JavaScript. While `requests` works here, I’m considering Selenium for future versions to handle more complex scenarios.
+
+---
+
+### **2. Sending Desktop Notifications**
+
+Once the script detects that an item is in stock, it triggers a desktop notification. This ensures I get notified instantly, without needing to constantly refresh the page.
+
+<CodeBlock className="my-24"
+    compact
+    codeInstances={[
+        {
+            code: `from plyer import notification
+
+def send_desktop_notification(message):
+    notification.notify(
+        title="Stock Alert",
+        message=message,
+        timeout=10  # Notification lasts 10 seconds
+    )`,
+            label: 'Notification Logic',
+            language: 'python'
+        },
+    ]}
+    copyButton
+/>
+
+**Why `plyer`?**
+- It’s lightweight and cross-platform, working seamlessly on Windows, macOS, and Linux.
+- Notifications are straightforward to configure and highly effective.
+
+---
+
+### **3. Handling Errors Gracefully**
+
+Network issues or server rate limits can interrupt scraping. To address this, I implemented retries with exponential backoff. This reduces the load on the server and increases the script's reliability.
+
+<CodeBlock className="my-24"
+    compact
+    codeInstances={[
+        {
+            code: `def check_stock(url):
+    retries = 3
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            # Stock checking logic here
+            break
+        except requests.exceptions.RequestException as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)  # Waits 1, 2, 4 seconds before retrying
+            else:
+                return f"Error: {e}"`,
+            label: 'Retry Logic',
+            language: 'python'
+        },
+    ]}
+    copyButton
+/>
+
+**Key Benefits:**
+- Retries ensure temporary network issues don’t derail the script.
+- Exponential backoff avoids overwhelming the server with repeated requests.
+
+---
+
+### **4. Continuous Monitoring**
+
+The script continuously checks stock status at regular intervals, alerting me as soon as an item becomes available. This is achieved through a loop with a delay:
+
+<CodeBlock className="my-24"
+    compact
+    codeInstances={[
+        {
+            code: `def monitor_stock(urls):
+    while True:
+        for url, tag in urls:
+            stock_status = check_stock(url)
+            print(f"Checked {tag}: {stock_status}")
+
+            if stock_status == "In Stock":
+                send_desktop_notification(f"The item '{tag}' is now in stock: {url}")
+        time.sleep(60)  # Waits 1 minute before checking again`,
+            label: 'Continuous Monitoring Logic',
+            language: 'python'
+        },
+    ]}
+    copyButton
+/>
+
+**Why It Works:**
+- Multiple URLs can be monitored simultaneously by looping through a list of (URL, tag) pairs.
+- A 60-second interval ensures the script is polite to the server while still being timely.
+
+---
+
+## Setting Up and Running the Script
+
+To use the script, you’ll first input the URLs of products you want to monitor and assign tags for easy identification. Here’s the setup process:
+
+<CodeBlock className="my-24"
+    compact
+    codeInstances={[
+        {
+            code: `if __name__ == "__main__":
+    urls = []
+    print("Welcome! Let's set up your stock checker.")
+    while True:
+        url = input("Enter a product URL to monitor: ").strip()
+        if url:
+            tag = input("Enter a reference tag for this product: ").strip()
+            urls.append((url, tag))
+        more = input("Add another URL? (yes/no): ").strip().lower()
+        if more != "yes":
+            break
+
+    monitor_stock(urls)`,
+            label: 'User Setup Logic',
+            language: 'python'
+        },
+    ]}
+    copyButton
+/>
+
+---
+
+## Future Enhancements
+
+1. **Email or SMS Alerts:** Expand notifications to email or SMS for better accessibility.
+2. **JavaScript Rendering:** Use Selenium or Playwright for dynamically loaded pages.
+3. **Cloud Deployment:** Run the script on a cloud service like AWS Lambda for 24/7 monitoring.
+
+---
+
+## Closing Thoughts
+
+This project turned my frustration into an opportunity to learn and create something useful. With a few lines of Python, I can now monitor ASOS sample sales and get notified instantly when my favorite items are back in stock. Try it for yourself, and let me know how it works for you!
+
