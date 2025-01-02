@@ -2,13 +2,13 @@ import { InlineCode } from "@/once-ui/components";
 
 const person = {
     firstName: 'Kaysar',
-    lastName:  '_',
+    lastName:  '',
     get name() {
         return `${this.firstName} ${this.lastName}`;
     },
     role:      'Senior Data Analyst',
     avatar:    '/images/avatar.jpg',
-    location:  'London/Europe',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+    location:  'Europe/United Kingdom',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
     languages: ['English', 'Bengali']  // optional: Leave the array empty if you don't want to display languages
 }
 
@@ -48,7 +48,7 @@ const home = {
     title: `${person.name}'s Portfolio`,
     description: `Portfolio website showcasing my work as a ${person.role}`,
     headline: <>Senior Data Analyst</>,
-    subline: <>I'm Kaysar, a senior data analyst at <InlineCode>Gain Theory</InlineCode>, where I help drive business insights using data <br/> user experiences. After hours, I build my own projects.</>
+    subline: <>I'm Kaysar, a senior data analyst at <InlineCode>Gain Theory</InlineCode>, where I help drive business insights <br/> using data user experiences. <br/>After hours, I build my own projects.</>
 }
 
 const about = {
@@ -76,7 +76,7 @@ const about = {
         title: 'Work Experience',
         experiences: [
             {
-                company: 'FLY',
+                company: 'Gain Theory',
                 timeframe: '2022 - Present',
                 role: 'Senior Design Engineer',
                 achievements: [
