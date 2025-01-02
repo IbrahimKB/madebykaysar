@@ -6,17 +6,17 @@ const person = {
     get name() {
         return `${this.firstName} ${this.lastName}`;
     },
-    role:      'Design Engineer',
+    role:      'Senior Data Analyst',
     avatar:    '/images/avatar.jpg',
-    location:  'Asia/Jakarta',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-    languages: ['English', 'Bahasa']  // optional: Leave the array empty if you don't want to display languages
+    location:  'London/Europe',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+    languages: ['English', 'Bengali']  // optional: Leave the array empty if you don't want to display languages
 }
 
-const newsletter = {
-    display: true,
-    title: <>Subscribe to {person.firstName}'s Newsletter</>,
-    description: <>I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering.</>
-}
+// const newsletter = {
+    // display: true,
+    // title: <>Subscribe to {person.firstName}'s Newsletter</>,
+    // description: <>I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering.</>
+// }
 
 const social = [
     // Links are automatically displayed.
@@ -39,7 +39,7 @@ const social = [
     {
         name: 'Email',
         icon: 'email',
-        link: 'mailto:example@gmail.com',
+        link: '',
     },
 ]
 
@@ -47,8 +47,8 @@ const home = {
     label: 'Home',
     title: `${person.name}'s Portfolio`,
     description: `Portfolio website showcasing my work as a ${person.role}`,
-    headline: <>Design engineer and builder</>,
-    subline: <>I'm Selene, a design engineer at <InlineCode>FLY</InlineCode>, where I craft intuitive<br/> user experiences. After hours, I build my own projects.</>
+    headline: <>Senior Data Analyst</>,
+    subline: <>I'm Kaysar, a senior data analyst at <InlineCode>Gain Theory</InlineCode>, where I help drive business insights using data <br/> user experiences. After hours, I build my own projects.</>
 }
 
 const about = {
