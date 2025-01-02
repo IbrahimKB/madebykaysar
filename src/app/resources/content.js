@@ -24,12 +24,12 @@ const social = [
     {
         name: 'GitHub',
         icon: 'github',
-        link: 'https://https://github.com/IbrahimKB/',
+        link: 'https://https://github.com/IbrahimKB',
     },
     {
         name: 'LinkedIn',
         icon: 'linkedin',
-        link: 'https://www.linkedin.com/company/once-ui/',
+        link: 'https://www.linkedin.com/in/ibrahim-boksh/',
     },
     {
         name: 'X',
