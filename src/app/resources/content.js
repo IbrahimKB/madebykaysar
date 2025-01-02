@@ -1,19 +1,19 @@
 import { InlineCode } from "@/once-ui/components";
 
 const person = {
-    firstName: 'Selene',
-    lastName:  'Yu',
+    firstName: 'Kaysar',
+    lastName:  '',
     get name() {
         return `${this.firstName} ${this.lastName}`;
     },
-    role:      'Design Engineer',
+    role:      'Senior Data Analyst',
     avatar:    '/images/avatar.jpg',
-    location:  'Asia/Jakarta',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-    languages: ['English', 'Bahasa']  // optional: Leave the array empty if you don't want to display languages
+    location:  'Europe/London',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+    languages: ['English', 'Bengali']  // optional: Leave the array empty if you don't want to display languages
 }
 
 const newsletter = {
-    display: true,
+    display: false,
     title: <>Subscribe to {person.firstName}'s Newsletter</>,
     description: <>I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering.</>
 }
@@ -24,7 +24,7 @@ const social = [
     {
         name: 'GitHub',
         icon: 'github',
-        link: 'https://github.com/once-ui-system/nextjs-starter',
+        link: 'https://https://github.com/IbrahimKB/',
     },
     {
         name: 'LinkedIn',
@@ -39,7 +39,7 @@ const social = [
     {
         name: 'Email',
         icon: 'email',
-        link: 'mailto:example@gmail.com',
+        link: '',
     },
 ]
 
@@ -47,8 +47,8 @@ const home = {
     label: 'Home',
     title: `${person.name}'s Portfolio`,
     description: `Portfolio website showcasing my work as a ${person.role}`,
-    headline: <>Design engineer and builder</>,
-    subline: <>I'm Selene, a design engineer at <InlineCode>FLY</InlineCode>, where I craft intuitive<br/> user experiences. After hours, I build my own projects.</>
+    headline: <>Senior Data Analyst</>,
+    subline: <>I'm Kaysar, a senior data analyst at <InlineCode>Gain Theory</InlineCode>, where I help drive business insights <br/> using data user experiences. <br/>After hours, I build my own projects.</>
 }
 
 const about = {
@@ -57,48 +57,43 @@ const about = {
     description: `Meet ${person.name}, ${person.role} from ${person.location}`,
     tableOfContent: {
         display: true,
-        subItems: false
+        subItems: true
     },
     avatar: {
         display: true
     },
     calendar: {
-        display: true,
+        display: false,
         link: 'https://cal.com'
     },
     intro: {
         display: true,
         title: 'Introduction',
-        description: <>Selene is a Jakarta-based design engineer with a passion for transforming complex challenges into simple, elegant design solutions. Her work spans digital interfaces, interactive experiences, and the convergence of design and technology.</>
+        description: <>Kaysar is a London-based data analyst with a passion for solving complex challenges through simple, impactful solutions. His work encompasses data-driven insights, interactive platforms, and the integration of analytics with innovative technology.</>
     },
     work: {
         display: true, // set to false to hide this section
         title: 'Work Experience',
         experiences: [
             {
-                company: 'FLY',
-                timeframe: '2022 - Present',
-                role: 'Senior Design Engineer',
+                company: 'Gain Theory',
+                timeframe: '2023 - Present',
+                role: 'Senior Data Analyst',
                 achievements: [
-                    <>Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user engagement and 30% faster load times.</>,
-                    <>Spearheaded the integration of AI tools into design workflows, enabling designers to iterate 50% faster.</>
+                    <>Streamlined global data operations, ensuring 95% data accuracy and compliance across regional pipelines, reducing errors by 20% through optimized workflows.</>,
+                    <>Successfully integrated new data sources for clients, delivering tailored solutions that improved operational efficiency and exceeded client expectations.</>,
+                    <>Improved data efficiency by leveraging Snowflake for scalable warehousing, achieving a 25% enhancement in query performance and streamlining data management processes.</>
                 ],
-                images: [ // optional: leave the array empty if you don't want to display images
-                    {
-                        src: '/images/projects/project-01/cover-01.jpg',
-                        alt: 'Once UI Project',
-                        width: 16,
-                        height: 9
-                    }
-                ]
+                images: [ ]
             },
             {
-                company: 'Creativ3',
-                timeframe: '2018 - 2022',
-                role: 'Lead Designer',
+                company: 'Rockborne',
+                timeframe: '2022 - 2023',
+                role: 'Data Consultant',
                 achievements: [
-                    <>Developed a design system that unified the brand across multiple platforms, improving design consistency by 40%.</>,
-                    <>Led a cross-functional team to launch a new product line, contributing to a 15% increase in overall company revenue.</>
+                    <>Delivered actionable insights for a bike-share company, leveraging SQL, Excel, and PowerPoint to clean, analyze, and visualize data. The solution contributed to a 15% cost reduction and a 20% revenue increase, presented effectively to stakeholders.</>,
+                    <>Developed a predictive healthcare model using Python, employing KNN algorithms and Random Forest classifiers to achieve 95% accuracy in stroke probability estimation. Documented findings in a detailed report with a confusion matrix and classification metrics, aiding healthcare professionals in early detection.</>,
+                    <>Created a Power BI dashboard to identify prime locations for a new Airbnb, incorporating imported visuals and DAX formulas. The dashboard exceeded client expectations by delivering an in-depth and visually compelling analysis.</>    
                 ],
                 images: [ ]
             }
@@ -109,17 +104,13 @@ const about = {
         title: 'Studies',
         institutions: [
             {
-                name: 'University of Jakarta',
-                description: <>Studied software engineering.</>,
-            },
-            {
-                name: 'Build the Future',
-                description: <>Studied online marketing and personal branding.</>,
+                name: 'University of Roehampton',
+                description: <>Studied Biomedical Science.</>,
             }
         ]
     },
     technical: {
-        display: true, // set to false to hide this section
+        display: false, // set to false to hide this section
         title: 'Technical skills',
         skills: [
             {
