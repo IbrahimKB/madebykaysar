@@ -12,11 +12,11 @@ const person = {
     languages: ['English', 'Bengali']  // optional: Leave the array empty if you don't want to display languages
 }
 
-// const newsletter = {
-    // display: true,
-    // title: <>Subscribe to {person.firstName}'s Newsletter</>,
-    // description: <>I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering.</>
-// }
+const newsletter = {
+    display: true,
+    title: <>Subscribe to {person.firstName}'s Newsletter</>,
+    description: <>I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering.</>
+}
 
 const social = [
     // Links are automatically displayed.
