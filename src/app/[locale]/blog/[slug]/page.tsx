@@ -119,7 +119,7 @@ export default function Blog({ params }: BlogParams) {
 				variant="tertiary"
 				size="s"
 				prefixIcon="chevronLeft">
-				Posts
+				Projects
 			</Button>
 			<Heading
 				variant="display-strong-s">
