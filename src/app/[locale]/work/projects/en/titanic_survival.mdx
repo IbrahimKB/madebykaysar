@@ -1,216 +1,110 @@
-# Predicting Titanic Survival: A Machine Learning Investigation
+---
+title: "Investigating Bank Robberies In The US"
+publishedAt: "2024-06-23"
+summary: "Exploring patterns in bank robberies using data analysis and machine learning to uncover insights and predict high-risk factors."
+tag: "Investigation"
+---
 
-## 1. Introduction
-
-The Titanic disaster of 1912 remains one of the most infamous maritime tragedies in history. Among the 2,224 passengers and crew onboard, only around 700 survived. The goal of this investigation is to analyze the factors that influenced survival rates and predict whether a passenger would survive using machine learning techniques.
-
-### Objective
-
-The primary aim of this study is to:
-1. Perform exploratory data analysis (EDA) to identify patterns and trends.
-2. Build a machine learning model to predict survival based on passenger attributes.
-
-### Hypothesis
-
-We hypothesize that:
-- Women and children were more likely to survive.
-- Passengers in higher classes had better chances of survival due to better access to lifeboats.
+Starting a new project is always exciting, especially when it involves uncovering patterns and insights into a complex topic. Today, I’m thrilled to share the beginning of my latest endeavor: **Investigating Bank Robberies**. This project combines crime data, socio-economic factors, and machine learning to analyze and predict robbery dynamics across the United States.
 
 ---
 
-## 2. Libraries and Dataset Overview
+## Why This Project?
 
-### Libraries Used
-- **`pandas`**: Data manipulation and cleaning.
-- **`numpy`**: Numerical computations.
-- **`matplotlib` & `seaborn`**: Visualization of data distributions and relationships.
-- **`sklearn`**: Machine learning models and evaluation metrics.
-
-### Dataset Description
-The dataset contains information about Titanic passengers, including:
-- **Demographic features**: `Age`, `Sex`, `Embarked`.
-- **Socioeconomic features**: `Pclass` (Passenger class), `Fare`.
-- **Family-related features**: `SibSp` (siblings/spouses), `Parch` (parents/children).
-- **Survival status**: `Survived` (0 = No, 1 = Yes).
-
-The dataset is divided into training and testing sets, enabling us to train our models and evaluate their performance on unseen data.
+Bank robberies are a fascinating intersection of human behavior, socio-economic conditions, and geography. By diving into this topic, I aim to:
+- **Understand Patterns:** Explore trends in bank robberies, such as where, when, and how they occur.
+- **Predict Outcomes:** Use machine learning to identify high-risk factors and predict the likelihood of success, injuries, or sentencing severity.
+- **Build Skills:** Apply advanced data analysis and visualization techniques to a real-world problem.
 
 ---
 
-## 3. Exploratory Data Analysis (EDA)
+## The Project Vision
 
-### Visualizing Key Features
-
-#### Age Distribution
-```python
-sns.histplot(train_df['Age'], kde=True, bins=30, color='blue')
-plt.title('Age Distribution')
-plt.xlabel('Age')
-plt.ylabel('Frequency')
-plt.show()
-```
-
-![Age Distribution](./images/age_distribution.png "Age Distribution")
-
-**Analysis**: The majority of passengers were between 20 and 40 years old, indicating a younger demographic onboard. Survival chances for different age groups can provide deeper insights.
-
-#### Survival by Gender
-```python
-sns.barplot(data=train_df, x='Sex', y='Survived', ci=None, palette='coolwarm')
-plt.title('Survival by Gender')
-plt.xlabel('Gender (0=Female, 1=Male)')
-plt.ylabel('Survival Rate')
-plt.show()
-```
-
-![Survival by Gender](./images/survival_by_gender.png "Survival by Gender")
-
-**Analysis**: Female passengers had a significantly higher survival rate compared to males. This supports historical accounts of "women and children first" policies during the evacuation.
-
-#### Survival by Class
-```python
-sns.barplot(data=train_df, x='Pclass_1', y='Survived', ci=None, palette='coolwarm')
-plt.title('Survival by Passenger Class')
-plt.xlabel('Class (1=First, 2=Second, 3=Third)')
-plt.ylabel('Survival Rate')
-plt.show()
-```
-
-![Survival by Class](./images/survival_by_class.png "Survival by Class")
-
-**Analysis**: First-class passengers had the highest survival rates, while third-class passengers fared the worst. This highlights socioeconomic disparities in access to lifeboats.
-
-#### Correlation Heatmap
-```python
-plt.figure(figsize=(10, 8))
-sns.heatmap(train_df.corr(), annot=True, cmap='coolwarm')
-plt.title('Correlation Heatmap')
-plt.show()
-```
-
-![Correlation Heatmap](./images/correlation_heatmap.png "Correlation Heatmap")
-
-**Analysis**: Fare and class exhibit notable correlations with survival, while age shows a weaker correlation. This suggests that financial and social status were critical factors.
+The goal of this investigation is to analyze patterns in bank robberies and provide actionable insights. Here’s what I hope to achieve:
+- **Descriptive Insights:** Understand how factors like location, time, and demographics influence robbery dynamics.
+- **Predictive Insights:** Develop models to identify high-risk areas and predict robbery outcomes.
+- **Interactive Reporting:** Create a dashboard to visualize findings and communicate results effectively.
 
 ---
 
-## 4. Feature Engineering
+## The Workflow
 
-Feature engineering transforms raw data into meaningful features for the machine learning model. Key steps included:
+The project will follow a structured workflow to ensure thorough analysis:
 
-### Addressing Family Size
-- **Problem**: Zero or unexpected values in `Family_size` could lead to errors during analysis.
-- **Solution**: Replace zero values with 1 to ensure meaningful calculations for features like `Fare_Per_Person`.
+### **Step 1: Data Collection**
+Gather data from reliable sources:
+- **Crime Data:** FBI Crime Data Explorer, Kaggle datasets.
+- **Population Data:** US Census Bureau.
+- **Geographic Data:** USGS, OpenStreetMap.
+- **Socio-Economic Data:** BEA, BLS.
 
-### Interaction Terms
-- **`Fare_Per_Person`**: Calculates the fare paid per family member to account for shared resources.
-- **`Age_Class`**: Multiplies age by passenger class to capture the interplay between age and social hierarchy.
+### **Step 2: Data Cleaning and Integration**
+Prepare the data for analysis:
+- Standardize formats for geographic keys and timestamps.
+- Handle missing values using imputation or removal.
+- Merge datasets to create a comprehensive model combining crime, demographic, and geographic data.
 
-### Advanced Transformations
-- **Log Transformation**: Reduces the impact of extreme fare values.
-- **Polynomial Features**: Captures non-linear relationships, such as squared impacts of age and fare.
+### **Step 3: Exploratory Data Analysis (EDA)**
+Use Python libraries like Pandas, Matplotlib, Seaborn, and Geopandas to uncover initial trends:
+- **Temporal Patterns:** Analyze trends over time, such as seasonal effects.
+- **Spatial Patterns:** Identify robbery hotspots and urban vs. rural dynamics.
+- **Demographic Patterns:** Investigate correlations with age, race, and gender.
 
-```python
-train_df['Log_Fare'] = np.log1p(train_df['Fare'])
-train_df['Fare_Squared'] = train_df['Fare'] ** 2
-train_df['Age_Squared'] = train_df['Age'] ** 2
-```
+### **Step 4: Predictive Modeling**
+Build machine learning models to make predictions:
+- **Classification Tasks:**
+  - Predict high-risk areas for robberies.
+  - Classify robbery outcomes (success or failure).
+- **Regression Tasks:**
+  - Predict injury likelihood or sentencing severity.
+  
+Algorithms to be used include Logistic Regression, Random Forest, and XGBoost, evaluated using metrics like accuracy, F1-score, and RMSE.
 
-![Feature Engineering Summary](./images/feature_engineering.png "Feature Engineering")
-
-**Impact**: These transformations enhance the model's ability to identify nuanced patterns in the data.
-
----
-
-## 5. Machine Learning Methodology
-
-### Modeling Approach
-We used a stacking classifier that combines multiple models:
-- **`RandomForestClassifier`**: Captures non-linear patterns and handles missing data well.
-- **`GradientBoostingClassifier`**: Handles imbalanced datasets effectively and captures complex relationships.
-- **`LogisticRegression`**: Acts as the final estimator to aggregate predictions from the base models.
-
-### Why Stacking?
-Stacking leverages the strengths of diverse models, allowing each to compensate for the weaknesses of others. This results in improved generalization and robustness.
-
----
-
-## 6. Evaluation
-
-### Metrics Used
-- **Accuracy**: Measures the overall correctness of predictions.
-- **Precision**: Indicates the proportion of positive identifications that were correct.
-- **Recall**: Reflects the ability to identify all positive cases.
-- **F1-Score**: Balances precision and recall into a single metric.
-
-### Results
-
-#### Accuracy and Classification Report
-```python
-accuracy = accuracy_score(y_test, y_pred_adjusted)
-print("Accuracy:", accuracy)
-print("\nClassification Report:\n", classification_report(y_test, y_pred_adjusted))
-```
-
-![Classification Report](./images/classification_report.png "Classification Report")
-
-**Observation**: The model achieved an accuracy of 87%, with balanced precision and recall scores.
-
-#### Confusion Matrix
-```python
-conf_matrix = confusion_matrix(y_test, y_pred_adjusted)
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Not Survived', 'Survived'], yticklabels=['Not Survived', 'Survived'])
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.title('Confusion Matrix')
-plt.show()
-```
-
-![Confusion Matrix](./images/confusion_matrix.png "Confusion Matrix")
-
-**Analysis**: The confusion matrix reveals that the model performs well on identifying survivors but occasionally misclassifies non-survivors.
-
-#### Precision-Recall Curve
-```python
-plt.figure(figsize=(8, 6))
-plt.plot(recalls, precisions, marker='.', label='Stacked Model')
-plt.axvline(x=np.max(recalls * precisions), color='red', linestyle='--', label='Optimal Threshold')
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.title('Precision-Recall Curve')
-plt.legend()
-plt.show()
-```
-
-![Precision-Recall Curve](./images/precision_recall_curve.png "Precision-Recall Curve")
-
-**Analysis**: The curve highlights the trade-off between precision and recall, with the optimal threshold maximizing the product of both metrics.
+### **Step 5: Insights and Reporting**
+Create an interactive dashboard using Dash or Streamlit to visualize:
+- Robbery trends and predictions.
+- Key insights from machine learning models.
 
 ---
 
-## 7. Results and Insights
+## Tools and Technologies
 
-### Key Findings
-- **Gender**: Women were far more likely to survive than men, supporting the "women and children first" policy.
-- **Class**: First-class passengers had a distinct survival advantage over lower-class passengers.
-- **Fare and Family Size**: Higher fares and smaller family sizes positively influenced survival probabilities.
+This project will leverage the following tools:
+- **Python Libraries:**
+  - Data Analysis: Pandas, NumPy.
+  - Visualization: Matplotlib, Seaborn, Plotly.
+  - Geospatial Analysis: Geopandas.
+  - Machine Learning: Scikit-learn, XGBoost, LightGBM.
+- **Data Sources:**
+  - Crime data from the FBI and Kaggle.
+  - Population data from the US Census Bureau.
+  - Geographic data from USGS and OpenStreetMap.
+- **Dashboard Tools:** Dash, Streamlit.
 
-### Hypothesis Check
-The results align with the hypothesis: women, children, and first-class passengers were more likely to survive. However, other factors like fare and family size also played critical roles.
+---
+
+## Challenges Ahead
+
+Like any project, this one comes with its challenges:
+- **Data Quality:** Ensuring completeness and consistency across diverse datasets.
+- **Feature Engineering:** Designing meaningful features for predictive modeling.
+- **Model Complexity:** Balancing interpretability and performance in machine learning models.
 
 ---
 
-## 8. Conclusion
+## What’s Next?
 
-### Summary
-The final stacked model achieved an accuracy of 87%, demonstrating the effectiveness of feature engineering and ensemble methods. The results validate historical accounts of survival trends during the Titanic disaster.
-
-### Limitations
-- **Data Imbalance**: The imbalance in survival classes could lead to biases in predictions.
-- **Feature Limitations**: Some features like `Embarked` had limited predictive power, suggesting additional data might improve performance.
-
-### Future Work
-- Explore external datasets to incorporate additional features such as passenger health or specific cabin locations.
-- Test advanced models like XGBoost or neural networks for potentially higher accuracy.
+The next steps for this project include:
+1. Finalizing data sources and downloading datasets.
+2. Cleaning and integrating datasets for analysis.
+3. Conducting exploratory data analysis (EDA) to identify trends.
+4. Building machine learning models and evaluating their performance.
+5. Designing an interactive dashboard to present findings.
 
 ---
+
+## Closing Thoughts
+
+Embarking on this project is not just an opportunity to solve a challenging problem—it’s a chance to explore new techniques, uncover meaningful patterns, and create a tool that can provide valuable insights. I’m excited about the journey ahead and look forward to sharing updates as I progress.
+
+Are you working on an investigative project too? Let’s connect and exchange ideas!
