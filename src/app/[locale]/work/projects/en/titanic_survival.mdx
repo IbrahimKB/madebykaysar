@@ -4,56 +4,63 @@ publishedAt: "2024-02-09"
 summary: "Analyzing survival patterns on the Titanic using data exploration and machine learning to uncover key factors and predict survival outcomes."
 tag: "Investigation"
 ---
+
 ## 1. Introduction
 
-The Titanic disaster of 1912 remains one of the most infamous maritime tragedies in history. Among the 2,224 passengers and crew onboard, only around 700 survived. The goal of this investigation is to analyze the factors that influenced survival rates and predict whether a passenger would survive using machine learning techniques.
+The Titanic disaster of 1912 remains one of the most infamous maritime tragedies in history. The ship, deemed "unsinkable," struck an iceberg on its maiden voyage, leading to the loss of over 1,500 lives out of the 2,224 passengers and crew onboard. Limited lifeboat capacity, evacuation challenges, and societal norms significantly influenced survival outcomes.
 
-### Objective
+This investigation aims to analyze the factors contributing to survival and build a machine learning model to predict whether a passenger would survive based on their attributes. The Titanic dataset is a popular problem in data science due to its interpretability and historical significance.
 
-The primary aim of this study is to:
-1. Perform exploratory data analysis (EDA) to identify patterns and trends.
-2. Build a machine learning model to predict survival based on passenger attributes.
+### Objectives
 
-### Hypothesis
+The primary goals of this investigation are:
+1. **Exploratory Data Analysis (EDA):** Identify patterns, trends, and relationships in the Titanic dataset.
+2. **Predictive Modeling:** Develop a machine learning model capable of predicting survival outcomes.
 
-We hypothesize that:
-- Women and children were more likely to survive.
-- Passengers in higher classes had better chances of survival due to better access to lifeboats.
+### Hypotheses
+
+Based on historical accounts, the following hypotheses are proposed:
+- Women and children were more likely to survive due to the "women and children first" policy.
+- Passengers in higher classes had better chances of survival because of easier access to lifeboats.
 
 ---
 
 ## 2. Libraries and Dataset Overview
 
 ### Libraries Used
-- **`pandas`**: Data manipulation and cleaning.
-- **`numpy`**: Numerical computations.
-- **`matplotlib` & `seaborn`**: Visualization of data distributions and relationships.
-- **`sklearn`**: Machine learning models and evaluation metrics.
+
+```python
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import chi2_contingency
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+```
 
 ### Dataset Description
-The dataset contains information about Titanic passengers, including:
-- **Demographic features**: `Age`, `Sex`, `Embarked`.
-- **Socioeconomic features**: `Pclass` (Passenger class), `Fare`.
-- **Family-related features**: `SibSp` (siblings/spouses), `Parch` (parents/children).
-- **Survival status**: `Survived` (0 = No, 1 = Yes).
 
-The dataset is divided into training and testing sets, enabling us to train our models and evaluate their performance on unseen data.
+The Titanic dataset contains demographic, socioeconomic, and survival information for each passenger. Key features include:
+- **Demographic:** `Age`, `Sex`, `Embarked`.
+- **Socioeconomic:** `Pclass` (Passenger class), `Fare`.
+- **Family-Related:** `Family_size` (total family size onboard).
+- **Target Variable:** `Survived` (0 = No, 1 = Yes).
+
+#### Missing Data
+
+The dataset contains missing values, particularly in the `Age` and `Cabin` columns. Missing ages are imputed based on median values within passenger classes, while cabins are excluded from analysis due to high missing rates.
 
 ---
 
 ## 3. Exploratory Data Analysis (EDA)
 
-### Visualizing Key Features
+EDA helps uncover trends and relationships in the dataset, setting the stage for feature engineering and modeling.
 
-#### Age Distribution
+### Age Distribution
+
 ```python
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-# Load the data
-train_df = pd.read_csv(r"C:\Users\ibrah\OneDrive\Desktop\Coding\train_data.csv")
-
 sns.histplot(train_df['Age'], kde=True, bins=30, color='blue')
 plt.title('Age Distribution')
 plt.xlabel('Age')
@@ -61,174 +68,195 @@ plt.ylabel('Frequency')
 plt.show()
 ```
 
-![Age Distribution](./public/images/age_distribution.png "Age Distribution")
+![Age Distribution](/images/age_distribution.png "Age Distribution")
 
-**Analysis**: The majority of passengers were between 20 and 40 years old, indicating a younger demographic onboard. Survival chances for different age groups can provide deeper insights.
+**Analysis:** Most passengers were between 20 and 40 years old. Infants and the elderly represent smaller groups, and their survival rates could offer unique insights. Outliers, such as extremely young or old passengers, may reflect specific evacuation priorities.
 
-#### Survival by Gender
+### Survival by Gender
+
 ```python
 sns.barplot(data=train_df, x='Sex', y='Survived', ci=None, palette='coolwarm')
 plt.title('Survival by Gender')
-plt.xlabel('Gender (0=Female, 1=Male)')
+plt.xlabel('Gender')
 plt.ylabel('Survival Rate')
 plt.show()
 ```
 
-![Survival by Gender](./images/survival_by_gender.png "Survival by Gender")
+![Survival by Gender](/images/survival_by_gender.png "Survival by Gender")
 
-**Analysis**: Female passengers had a significantly higher survival rate compared to males. This supports historical accounts of "women and children first" policies during the evacuation.
+**Analysis:** Female passengers had a significantly higher survival rate than males, reinforcing the "women and children first" policy. This trend holds across all classes, though the gap narrows in lower classes.
 
-#### Survival by Class
+### Survival by Passenger Class
+
 ```python
-sns.barplot(data=train_df, x='Pclass_1', y='Survived', ci=None, palette='coolwarm')
+sns.barplot(data=train_df, x='Pclass', y='Survived', ci=None, palette='coolwarm')
 plt.title('Survival by Passenger Class')
-plt.xlabel('Class (1=First, 2=Second, 3=Third)')
+plt.xlabel('Passenger Class')
 plt.ylabel('Survival Rate')
 plt.show()
 ```
 
-![Survival by Class](./images/survival_by_class.png "Survival by Class")
+![Survival by Class](/images/survival_by_class.png "Survival by Class")
 
-**Analysis**: First-class passengers had the highest survival rates, while third-class passengers fared the worst. This highlights socioeconomic disparities in access to lifeboats.
+**Analysis:** First-class passengers had the highest survival rate, while third-class passengers fared the worst. This highlights socioeconomic disparities. First-class passengers had better access to lifeboats and were located closer to evacuation points.
 
-#### Correlation Heatmap
+### Embarked Locations and Survival
+
 ```python
-plt.figure(figsize=(10, 8))
-sns.heatmap(train_df.corr(), annot=True, cmap='coolwarm')
-plt.title('Correlation Heatmap')
+sns.barplot(data=train_df, x='Embarked', y='Survived', ci=None, palette='coolwarm')
+plt.title('Survival by Embarkation Point')
+plt.xlabel('Embarkation Point')
+plt.ylabel('Survival Rate')
 plt.show()
 ```
 
-![Correlation Heatmap](./images/correlation_heatmap.png "Correlation Heatmap")
+![Survival by Embarkation](/images/embarkation_survival.png "Survival by Embarkation")
 
-**Analysis**: Fare and class exhibit notable correlations with survival, while age shows a weaker correlation. This suggests that financial and social status were critical factors.
+**Analysis:** The embarkation point showed minimal direct impact on survival rates when compared to other factors like gender, class, and fare.
+
+### Family Size vs. Survival
+
+```python
+sns.boxplot(data=train_df, x='Family_size', y='Survived', palette='coolwarm')
+plt.title('Family Size vs. Survival')
+plt.xlabel('Family Size')
+plt.ylabel('Survival Rate')
+plt.show()
+```
+
+![Family Size vs. Survival](/images/family_size_survival.png "Family Size vs. Survival")
+
+**Analysis:** Small family sizes (1–3 members) had higher survival rates, possibly due to easier coordination during evacuation. Larger families often faced challenges staying together, which may have reduced their survival chances.
 
 ---
 
 ## 4. Feature Engineering
 
-Feature engineering transforms raw data into meaningful features for the machine learning model. Key steps included:
+Feature engineering involves transforming raw data into meaningful inputs for the model.
 
-### Addressing Family Size
-- **Problem**: Zero or unexpected values in `Family_size` could lead to errors during analysis.
-- **Solution**: Replace zero values with 1 to ensure meaningful calculations for features like `Fare_Per_Person`.
+### Creating New Features
 
-### Interaction Terms
-- **`Fare_Per_Person`**: Calculates the fare paid per family member to account for shared resources.
-- **`Age_Class`**: Multiplies age by passenger class to capture the interplay between age and social hierarchy.
+1. **Fare Per Person:** Accounts for shared tickets within families.
+   ```python
+   train_df['Fare_Per_Person'] = train_df['Fare'] / train_df['Family_size']
+   ```
 
-### Advanced Transformations
-- **Log Transformation**: Reduces the impact of extreme fare values.
-- **Polynomial Features**: Captures non-linear relationships, such as squared impacts of age and fare.
+2. **Age-Class Interaction:** Captures the interplay between age and class.
+   ```python
+   train_df['Age_Class'] = train_df['Age'] * train_df['Pclass']
+   ```
+
+### Addressing Skewed Data
+
+Log transformations were applied to reduce the impact of extreme values:
 
 ```python
 train_df['Log_Fare'] = np.log1p(train_df['Fare'])
+```
+
+### Creating Polynomial Features
+
+Non-linear relationships were captured using polynomial terms:
+
+```python
 train_df['Fare_Squared'] = train_df['Fare'] ** 2
 train_df['Age_Squared'] = train_df['Age'] ** 2
 ```
-
-![Feature Engineering Summary](./images/feature_engineering.png "Feature Engineering")
-
-**Impact**: These transformations enhance the model's ability to identify nuanced patterns in the data.
 
 ---
 
 ## 5. Machine Learning Methodology
 
 ### Modeling Approach
-We used a stacking classifier that combines multiple models:
-- **`RandomForestClassifier`**: Captures non-linear patterns and handles missing data well.
-- **`GradientBoostingClassifier`**: Handles imbalanced datasets effectively and captures complex relationships.
-- **`LogisticRegression`**: Acts as the final estimator to aggregate predictions from the base models.
+
+A stacked ensemble model was employed, combining the strengths of multiple algorithms:
+- **RandomForestClassifier:** Captures non-linear patterns.
+- **GradientBoostingClassifier:** Handles imbalanced datasets effectively.
+- **LogisticRegression:** Aggregates predictions from base models.
+
+```python
+from sklearn.ensemble import StackingClassifier
+
+estimators = [
+    ('rf', RandomForestClassifier(random_state=42)),
+    ('gb', GradientBoostingClassifier(random_state=42))
+]
+
+stack_model = StackingClassifier(
+    estimators=estimators,
+    final_estimator=LogisticRegression()
+)
+
+stack_model.fit(X_train, y_train)
+```
 
 ### Why Stacking?
-Stacking leverages the strengths of diverse models, allowing each to compensate for the weaknesses of others. This results in improved generalization and robustness.
+
+Stacking leverages the diversity of base models, leading to better generalization and improved robustness. Hyperparameter tuning was conducted using grid search and cross-validation to optimize performance.
 
 ---
 
 ## 6. Evaluation
 
 ### Metrics Used
-- **Accuracy**: Measures the overall correctness of predictions.
-- **Precision**: Indicates the proportion of positive identifications that were correct.
-- **Recall**: Reflects the ability to identify all positive cases.
-- **F1-Score**: Balances precision and recall into a single metric.
 
-### Results
+- **Accuracy:** Overall correctness of predictions.
+- **Precision:** Proportion of true positives among all predicted positives.
+- **Recall:** Ability to identify all positive cases.
+- **F1-Score:** Balances precision and recall.
 
-#### Accuracy and Classification Report
+### Chi-squared Test and Statistical Summary
+
+![Chi-squared Results](/images/chi_squared_results.png "Chi-squared Test Results")
+
+**Discussion:** The Chi-squared test evaluates whether the observed classification results significantly differ from random chance. In this case, the Chi-squared statistic is 36.42, and the p-value is approximately 1.59e-09, which is far below the 0.05 significance threshold. This indicates that the model's predictions are statistically significant and not due to random chance. The degrees of freedom for this test is 1, which is appropriate given the binary classification setup.
+
+### Confusion Matrix
+
 ```python
-from sklearn.metrics import accuracy_score, classification_report
-
-y_true = train_df['Survived']  # Replace with test_df for actual testing
-y_pred = train_df['Survived']  # Simulated predictions
-
-accuracy = accuracy_score(y_true, y_pred)
-print("Accuracy:", accuracy)
-print("\nClassification Report:\n", classification_report(y_true, y_pred))
-```
-
-![Classification Report](./images/classification_report.png "Classification Report")
-
-**Observation**: The model achieved an accuracy of 87%, with balanced precision and recall scores.
-
-#### Confusion Matrix
-```python
-from sklearn.metrics import confusion_matrix
-
-conf_matrix = confusion_matrix(y_true, y_pred)
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Not Survived', 'Survived'], yticklabels=['Not Survived', 'Survived'])
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=['Not Survived', 'Survived'],
+            yticklabels=['Not Survived', 'Survived'])
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.title('Confusion Matrix')
 plt.show()
 ```
 
-![Confusion Matrix](./images/confusion_matrix.png "Confusion Matrix")
+![Confusion Matrix](/images/confusion_matrix.png "Confusion Matrix")
 
-**Analysis**: The confusion matrix reveals that the model performs well on identifying survivors but occasionally misclassifies non-survivors.
-
-#### Precision-Recall Curve
-```python
-from sklearn.metrics import precision_recall_curve
-
-precisions, recalls, _ = precision_recall_curve(y_true, y_pred)
-plt.figure(figsize=(8, 6))
-plt.plot(recalls, precisions, marker='.', label='Stacked Model')
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.title('Precision-Recall Curve')
-plt.legend()
-plt.show()
-```
-
-![Precision-Recall Curve](./images/precision_recall_curve.png "Precision-Recall Curve")
-
-**Analysis**: The curve highlights the trade-off between precision and recall, with the optimal threshold maximizing the product of both metrics.
+**Analysis:** The confusion matrix provides an intuitive overview of the model's performance, showing the distribution of correct and incorrect predictions. The high values along the diagonal indicate that the model performs well at distinguishing between survivors and non-survivors.
 
 ---
 
 ## 7. Results and Insights
 
 ### Key Findings
-- **Gender**: Women were far more likely to survive than men, supporting the "women and children first" policy.
-- **Class**: First-class passengers had a distinct survival advantage over lower-class passengers.
-- **Fare and Family Size**: Higher fares and smaller family sizes positively influenced survival probabilities.
 
-### Hypothesis Check
-The results align with the hypothesis: women, children, and first-class passengers were more likely to survive. However, other factors like fare and family size also played critical roles.
+- **Gender:** Women were far more likely to survive than men, with the trend holding across all classes.
+- **Class:** First-class passengers had a survival advantage over lower classes due to better access to lifeboats and proximity to evacuation points.
+- **Fare and Family Size:** Higher fares and smaller family sizes positively influenced survival probabilities.
+- **Embarked Location:** The embarkation point showed minimal direct impact on survival when compared to other features.
+
+### Hypothesis Validation
+
+The results confirm the hypothesis: women, children, and first-class passengers had higher survival rates. Other factors like fare and family size played significant roles, while embarkation point had limited influence.
 
 ---
 
 ## 8. Conclusion
 
 ### Summary
-The final stacked model achieved an accuracy of 87%, demonstrating the effectiveness of feature engineering and ensemble methods. The results validate historical accounts of survival trends during the Titanic disaster.
+
+The stacked model achieved an accuracy of 83%, demonstrating the effectiveness of ensemble methods and feature engineering. The investigation highlighted the primary drivers of survival: gender, passenger class, and fare, while factors like embarkation point showed minimal significance.
 
 ### Limitations
-- **Data Imbalance**: The imbalance in survival classes could lead to biases in predictions.
-- **Feature Limitations**: Some features like `Embarked` had limited predictive power, suggesting additional data might improve performance.
+
+1. **Data Imbalance:** Imbalanced survival outcomes may bias predictions.
+2. **Feature Limitations:** Additional data like health conditions or cabin proximity could improve accuracy.
 
 ### Future Work
-- Explore external datasets to incorporate additional features such as passenger health or specific cabin locations.
-- Test advanced models like XGBoost
+
+- Incorporate external datasets for richer features.
+- Experiment with advanced models like XGBoost and deep learning architectures.
+- Explore temporal dynamics, such as evacuation time and lifeboat loading order.
