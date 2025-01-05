@@ -16,7 +16,7 @@ interface BlogParams {
 		locale: string;
     };
 }
-
+//test
 export async function generateStaticParams() {
 	const locales = routing.locales;
     
